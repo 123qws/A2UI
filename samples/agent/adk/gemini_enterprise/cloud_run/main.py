@@ -18,8 +18,8 @@ import os
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
-from agent import ContactAgent
-from agent_executor import ContactAgentExecutor
+from agent import DealAgent
+from agent_executor import DealAgentExecutor
 from dotenv import load_dotenv
 import uvicorn
 
@@ -37,8 +37,8 @@ def serve():
     port = int(os.environ.get("PORT", 8080))
     base_url = f"http://{host}:{port}"
 
-    agent = ContactAgent(base_url=base_url)
-    agent_executor = ContactAgentExecutor(agent=agent)
+    agent = DealAgent(base_url=base_url)
+    agent_executor = DealAgentExecutor(agent=agent)
     request_handler = DefaultRequestHandler(
         agent_executor=agent_executor,
         task_store=InMemoryTaskStore(),

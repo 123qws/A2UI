@@ -1,0 +1,691 @@
+[
+  {
+    "surfaceUpdate": {
+      "surfaceId": "hitl-feedback",
+      "components": [
+        {
+          "id": "hitl-root",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "hitl-header-title",
+                  "hitl-main-tabs"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "hitl-header-title",
+          "component": {
+            "Image": {
+              "usageHint": "smallFeature",
+              "url": {
+                "literalString": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22220%22%20height%3D%2222%22%20viewBox%3D%220%200%20220%2022%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%236366f1%22/%3E%3Cstop%20offset%3D%220.5%22%20stop-color%3D%22%23ec4899%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f59e0b%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ctext%20x%3D%221%22%20y%3D%2215%22%20font-family%3D%22Roboto%2CArial%2Csans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22600%22%20fill%3D%22url%28%23g%29%22%3EHITL%20UI%20options%3C/text%3E%3C/svg%3E"
+              },
+              "altText": {
+                "literalString": "HITL UI options"
+              }
+            }
+          }
+        },
+        {
+          "id": "hitl-main-tabs",
+          "component": {
+            "Tabs": {
+              "tabItems": [
+                {
+                  "title": {
+                    "literalString": "1 \u00b7 Modal"
+                  },
+                  "child": "hitl-tab-modal"
+                },
+                {
+                  "title": {
+                    "literalString": "2 \u00b7 Compact"
+                  },
+                  "child": "hitl-tab-compact"
+                },
+                {
+                  "title": {
+                    "literalString": "3 \u00b7 Card"
+                  },
+                  "child": "hitl-tab-card"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "hitl-tab-modal",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "tab-m-blurb",
+                  "tab-m-modal"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-blurb",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Thread-friendly: a small card prompt is all that shows until the user taps it. The full form opens in a modal. The entry has no submit action\u2014only opening the dialog is client-side."
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-modal",
+          "component": {
+            "Modal": {
+              "entryPointChild": "tab-m-entry",
+              "contentChild": "tab-m-body-col"
+            }
+          }
+        },
+        {
+          "id": "tab-m-entry",
+          "component": {
+            "Card": {
+              "child": "tab-m-entry-col"
+            }
+          }
+        },
+        {
+          "id": "tab-m-entry-col",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "tab-m-entry-title",
+                  "tab-m-entry-hint"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-entry-title",
+          "component": {
+            "Text": {
+              "usageHint": "body",
+              "text": {
+                "literalString": "Rate this response"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-entry-hint",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Tap to open the feedback form \u2192"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-body-col",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "tab-m-body-heading",
+                  "tab-m-scale-row",
+                  "tab-m-slider",
+                  "tab-m-scale-hint",
+                  "tab-m-div",
+                  "tab-m-checkbox",
+                  "tab-m-feedback",
+                  "tab-m-submit"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-body-heading",
+          "component": {
+            "Text": {
+              "usageHint": "h5",
+              "text": {
+                "literalString": "Feedback"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-scale-row",
+          "component": {
+            "Row": {
+              "children": {
+                "explicitList": [
+                  "tab-m-smin",
+                  "tab-m-smax"
+                ]
+              },
+              "distribution": "spaceBetween",
+              "alignment": "center"
+            }
+          }
+        },
+        {
+          "id": "tab-m-smin",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "1 = Not helpful"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-smax",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "5 = Very helpful"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-slider",
+          "component": {
+            "Slider": {
+              "label": {
+                "literalString": "How helpful was this response?"
+              },
+              "value": {
+                "path": "/helpfulness"
+              },
+              "minValue": 1,
+              "maxValue": 5
+            }
+          }
+        },
+        {
+          "id": "tab-m-scale-hint",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Tip: 3 means somewhat helpful."
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-div",
+          "component": {
+            "Divider": {
+              "axis": "horizontal"
+            }
+          }
+        },
+        {
+          "id": "tab-m-checkbox",
+          "component": {
+            "CheckBox": {
+              "label": {
+                "literalString": "The information was complete (nothing important missing)"
+              },
+              "value": {
+                "path": "/infoComplete"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-feedback",
+          "component": {
+            "TextField": {
+              "label": {
+                "literalString": "Written feedback (optional)"
+              },
+              "text": {
+                "path": "/feedbackText"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-submit-txt",
+          "component": {
+            "Text": {
+              "text": {
+                "literalString": "Submit feedback"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-m-submit",
+          "component": {
+            "Button": {
+              "child": "tab-m-submit-txt",
+              "primary": true,
+              "action": {
+                "name": "submit_feedback",
+                "context": [
+                  {
+                    "key": "helpfulness",
+                    "value": {
+                      "path": "/helpfulness"
+                    }
+                  },
+                  {
+                    "key": "infoComplete",
+                    "value": {
+                      "path": "/infoComplete"
+                    }
+                  },
+                  {
+                    "key": "feedbackText",
+                    "value": {
+                      "path": "/feedbackText"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "hitl-tab-compact",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "tab-cp-blurb",
+                  "tab-cp-scale-row",
+                  "tab-cp-slider",
+                  "tab-cp-scale-hint",
+                  "tab-cp-checkbox",
+                  "tab-cp-feedback",
+                  "tab-cp-submit"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-blurb",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Compact strip: same fields with minimal extra copy\u2014good when you want everything inline without a card or overlay."
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-scale-row",
+          "component": {
+            "Row": {
+              "children": {
+                "explicitList": [
+                  "tab-cp-smin",
+                  "tab-cp-smax"
+                ]
+              },
+              "distribution": "spaceBetween",
+              "alignment": "center"
+            }
+          }
+        },
+        {
+          "id": "tab-cp-smin",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "1 = Not helpful"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-smax",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "5 = Very helpful"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-slider",
+          "component": {
+            "Slider": {
+              "label": {
+                "literalString": "How helpful was this response?"
+              },
+              "value": {
+                "path": "/helpfulness"
+              },
+              "minValue": 1,
+              "maxValue": 5
+            }
+          }
+        },
+        {
+          "id": "tab-cp-scale-hint",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Tip: 3 means somewhat helpful."
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-checkbox",
+          "component": {
+            "CheckBox": {
+              "label": {
+                "literalString": "The information was complete (nothing important missing)"
+              },
+              "value": {
+                "path": "/infoComplete"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-feedback",
+          "component": {
+            "TextField": {
+              "label": {
+                "literalString": "Written feedback (optional)"
+              },
+              "text": {
+                "path": "/feedbackText"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-submit-txt",
+          "component": {
+            "Text": {
+              "text": {
+                "literalString": "Submit feedback"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-cp-submit",
+          "component": {
+            "Button": {
+              "child": "tab-cp-submit-txt",
+              "primary": true,
+              "action": {
+                "name": "submit_feedback",
+                "context": [
+                  {
+                    "key": "helpfulness",
+                    "value": {
+                      "path": "/helpfulness"
+                    }
+                  },
+                  {
+                    "key": "infoComplete",
+                    "value": {
+                      "path": "/infoComplete"
+                    }
+                  },
+                  {
+                    "key": "feedbackText",
+                    "value": {
+                      "path": "/feedbackText"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "hitl-tab-card",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "tab-card-blurb",
+                  "tab-card"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-blurb",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Card panel: higher visual weight for important answers or when you want the form to feel like a focused block."
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card",
+          "component": {
+            "Card": {
+              "child": "tab-card-col"
+            }
+          }
+        },
+        {
+          "id": "tab-card-col",
+          "component": {
+            "Column": {
+              "children": {
+                "explicitList": [
+                  "tab-card-instruct",
+                  "tab-card-scale-row",
+                  "tab-card-slider",
+                  "tab-card-scale-hint",
+                  "tab-card-checkbox",
+                  "tab-card-feedback",
+                  "tab-card-submit"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-instruct",
+          "component": {
+            "Text": {
+              "usageHint": "h5",
+              "text": {
+                "literalString": "Feedback"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-scale-row",
+          "component": {
+            "Row": {
+              "children": {
+                "explicitList": [
+                  "tab-card-smin",
+                  "tab-card-smax"
+                ]
+              },
+              "distribution": "spaceBetween",
+              "alignment": "center"
+            }
+          }
+        },
+        {
+          "id": "tab-card-smin",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "1 = Not helpful"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-smax",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "5 = Very helpful"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-slider",
+          "component": {
+            "Slider": {
+              "label": {
+                "literalString": "How helpful was this response?"
+              },
+              "value": {
+                "path": "/helpfulness"
+              },
+              "minValue": 1,
+              "maxValue": 5
+            }
+          }
+        },
+        {
+          "id": "tab-card-scale-hint",
+          "component": {
+            "Text": {
+              "usageHint": "caption",
+              "text": {
+                "literalString": "Tip: 3 means somewhat helpful."
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-checkbox",
+          "component": {
+            "CheckBox": {
+              "label": {
+                "literalString": "The information was complete (nothing important missing)"
+              },
+              "value": {
+                "path": "/infoComplete"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-feedback",
+          "component": {
+            "TextField": {
+              "label": {
+                "literalString": "Written feedback (optional)"
+              },
+              "text": {
+                "path": "/feedbackText"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-submit-txt",
+          "component": {
+            "Text": {
+              "text": {
+                "literalString": "Submit feedback"
+              }
+            }
+          }
+        },
+        {
+          "id": "tab-card-submit",
+          "component": {
+            "Button": {
+              "child": "tab-card-submit-txt",
+              "primary": true,
+              "action": {
+                "name": "submit_feedback",
+                "context": [
+                  {
+                    "key": "helpfulness",
+                    "value": {
+                      "path": "/helpfulness"
+                    }
+                  },
+                  {
+                    "key": "infoComplete",
+                    "value": {
+                      "path": "/infoComplete"
+                    }
+                  },
+                  {
+                    "key": "feedbackText",
+                    "value": {
+                      "path": "/feedbackText"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "dataModelUpdate": {
+      "surfaceId": "hitl-feedback",
+      "path": "/",
+      "contents": [
+        {
+          "key": "helpfulness",
+          "valueNumber": 3
+        },
+        {
+          "key": "infoComplete",
+          "valueBoolean": false
+        },
+        {
+          "key": "feedbackText",
+          "valueString": ""
+        }
+      ]
+    }
+  },
+  {
+    "beginRendering": {
+      "surfaceId": "hitl-feedback",
+      "root": "hitl-root",
+      "catalogId": "https://a2ui.org/specification/v0_8/standard_catalog_definition.json",
+      "styles": {
+        "primaryColor": "#6366F1",
+        "font": "Roboto"
+      }
+    }
+  }
+]

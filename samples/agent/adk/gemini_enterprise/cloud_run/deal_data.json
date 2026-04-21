@@ -1,0 +1,41 @@
+[
+  {
+    "id": "deal-1001",
+    "customerName": "Acme Retail Group",
+    "sector": "Retail",
+    "region": "North America",
+    "stage": "Negotiation",
+    "productFocus": "Vertex AI + BigQuery",
+    "estimatedValueUsd": "$2.4M",
+    "closeQuarter": "Q3 2026",
+    "accountExecutive": "Priya Sharma",
+    "nextStep": "Finalize legal terms and security review",
+    "dealSummary": "Modernize recommendation systems and marketing analytics."
+  },
+  {
+    "id": "deal-1002",
+    "customerName": "Skyline Health Network",
+    "sector": "Healthcare",
+    "region": "North America",
+    "stage": "Technical Validation",
+    "productFocus": "GKE + Cloud SQL",
+    "estimatedValueUsd": "$1.1M",
+    "closeQuarter": "Q4 2026",
+    "accountExecutive": "Daniel Park",
+    "nextStep": "Complete migration POC for patient scheduling platform",
+    "dealSummary": "Consolidate legacy workloads into managed Kubernetes services."
+  },
+  {
+    "id": "deal-1003",
+    "customerName": "NovaBank Digital",
+    "sector": "Financial Services",
+    "region": "EMEA",
+    "stage": "Proposal",
+    "productFocus": "Chronicle + Security Command Center",
+    "estimatedValueUsd": "$3.6M",
+    "closeQuarter": "Q2 2026",
+    "accountExecutive": "Marina Ionescu",
+    "nextStep": "Present executive business case and risk posture improvements",
+    "dealSummary": "Improve SOC operations and threat detection coverage."
+  }
+]

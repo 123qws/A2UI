@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections.abc import AsyncIterable
 import json
 import logging
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from a2a.types import (
     AgentCapabilities,
@@ -28,12 +27,10 @@ from a2a.types import (
 from a2ui.a2a.extension import get_a2ui_agent_extension
 from a2ui.a2a.parts import parse_response_to_parts
 from a2ui.basic_catalog.provider import BasicCatalog
-from a2ui.parser.parser import parse_response
 from a2ui.schema.common_modifiers import remove_strict_validation
 from a2ui.schema.constants import A2UI_CLOSE_TAG, A2UI_OPEN_TAG, VERSION_0_8
 from a2ui.schema.manager import A2uiSchemaManager
 import dotenv
-from google.adk.agents import run_config
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
@@ -41,8 +38,8 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 import jsonschema
-from prompt_builder import ROLE_DESCRIPTION, UI_DESCRIPTION, WORKFLOW_DESCRIPTION, get_text_prompt
-from tools import get_contact_info
+from prompt_builder import get_deal_agent_system_prompt
+from tools import get_deal_info
 
 logger = logging.getLogger(__name__)
 
@@ -50,25 +47,27 @@ SUPPORTED_CONTENT_TYPES = ["text", "text/plain"]
 
 dotenv.load_dotenv()
 
+_FEEDBACK_QUERY_PREFIX = "FEEDBACK_SUBMITTED:"
 
-class ContactAgent:
-  """An agent that finds contact info for colleagues."""
+
+class DealAgent:
+  """Demo agent: markdown answers + optional host-injected A2UI HITL feedback.
+
+  Injected payloads in ``examples/0.8/*.json`` follow A2UI v0.8 stream order:
+  ``surfaceUpdate`` → ``dataModelUpdate`` (when needed) → ``beginRendering`` last,
+  so clients can buffer structure and state before the first paint. See
+  https://a2ui.org/specification/v0.8-a2ui/ Section 1.5.
+  """
 
   def __init__(self, base_url: str):
     self.base_url = base_url
-    self._agent_name = "contact_agent"
+    self._agent_name = "deal_agent"
     self._user_id = "remote_agent"
-    self._text_runner: Optional[Runner] = self._build_runner(self._build_llm_agent())
+    self._runner: Runner = self._build_runner(self._build_llm_agent())
 
     self._schema_managers: Dict[str, A2uiSchemaManager] = {}
-    self._ui_runners: Dict[str, Runner] = {}
-
-    # Gemini Enerprise only supports VERSION_0_8 for now.
     for version in [VERSION_0_8]:
-      schema_manager = self._build_schema_manager(version)
-      self._schema_managers[version] = schema_manager
-      agent = self._build_llm_agent(schema_manager)
-      self._ui_runners[version] = self._build_runner(agent)
+      self._schema_managers[version] = self._build_schema_manager(version)
 
     self._agent_card = self._build_agent_card()
 
@@ -77,7 +76,6 @@ class ContactAgent:
     return self._agent_card
 
   def _build_schema_manager(self, version: str) -> A2uiSchemaManager:
-    # Gemini Enerprise only supports VERSION_0_8 for now.
     return A2uiSchemaManager(
         version=version,
         catalogs=[
@@ -91,40 +89,46 @@ class ContactAgent:
         schema_modifiers=[remove_strict_validation],
     )
 
+  def _load_injected_a2ui(self, filename: str) -> List[Any]:
+    path = os.path.join(os.path.dirname(__file__), "examples", VERSION_0_8, filename)
+    with open(path, encoding="utf-8") as f:
+      return json.load(f)
+
   def _build_agent_card(self) -> AgentCard:
     """Builds the AgentCard for this agent, describing its capabilities and skills."""
     extensions = []
-    if self._schema_managers:
-      for version, sm in self._schema_managers.items():
-        ext = get_a2ui_agent_extension(
-            version,
-            sm.accepts_inline_catalogs,
-            sm.supported_catalog_ids,
-        )
-        extensions.append(ext)
+    for version, sm in self._schema_managers.items():
+      ext = get_a2ui_agent_extension(
+          version,
+          sm.accepts_inline_catalogs,
+          sm.supported_catalog_ids,
+      )
+      extensions.append(ext)
 
     capabilities = AgentCapabilities(
         streaming=True,
         extensions=extensions,
     )
     skill = AgentSkill(
-        id="find_contact",
-        name="Find Contact Tool",
+        id="find_deal",
+        name="Find Deal Tool",
         description=(
-            "Helps find contact information for colleagues (e.g., email,"
-            " location, team)."
+            "Finds fake Google Cloud customer deal details and deal pipeline"
+            " status."
         ),
-        tags=["contact", "directory", "people", "finder"],
+        tags=["deals", "pipeline", "sales", "google cloud"],
         examples=[
-            "Who is David Chen in marketing?",
-            "Find Sarah Lee from engineering",
+            "Show deal status for Acme Retail Group",
+            "List all open Google Cloud deals",
         ],
     )
 
     return AgentCard(
-        name="Contact Lookup Agent",
+        name="Google Cloud Deal Agent",
         description=(
-            "This agent helps find contact info for people in your organization."
+            "Markdown-first demo agent (Deal pipeline). When the client "
+            "supports A2UI, the host appends a standard HITL feedback surface—"
+            "the same pattern works for any text agent."
         ),
         url=self.base_url,
         version="1.0.0",
@@ -145,59 +149,51 @@ class ContactAgent:
     )
 
   def get_processing_message(self) -> str:
-    return "Looking up contact information..."
+    return "Reviewing deal pipeline..."
 
-  def _build_llm_agent(
-      self, schema_manager: Optional[A2uiSchemaManager] = None
-  ) -> LlmAgent:
-    """Builds the LLM agent for the contact agent."""
-
-    instruction = (
-        schema_manager.generate_system_prompt(
-            role_description=ROLE_DESCRIPTION,
-            workflow_description=WORKFLOW_DESCRIPTION,
-            ui_description=UI_DESCRIPTION,
-            include_schema=True,
-            include_examples=True,
-            validate_examples=True,
-        )
-        if schema_manager
-        else get_text_prompt()
-    )
-
+  def _build_llm_agent(self) -> LlmAgent:
     return LlmAgent(
         model=os.getenv("MODEL", "gemini-2.5-flash"),
         name=self._agent_name,
-        description="An agent that finds colleague contact info.",
-        instruction=instruction,
-        tools=[get_contact_info],
+        description=(
+            "Returns fake Google Cloud customer deals as markdown (demo). "
+            "No A2UI in model output."
+        ),
+        instruction=get_deal_agent_system_prompt(),
+        tools=[get_deal_info],
     )
 
   async def fetch_response(
       self, query, session_id, ui_version: Optional[str] = None
   ) -> List[Part]:
-    """Fetches the response from the agent."""
+    """Runs the text agent; injects A2UI for HITL when ``ui_version`` is set."""
 
     session_state = {"base_url": self.base_url}
+    schema_manager = self._schema_managers.get(ui_version) if ui_version else None
+    selected_catalog = (
+        schema_manager.get_selected_catalog() if schema_manager else None
+    )
 
-    # Determine which runner to use based on whether the a2ui extension is active.
-    if ui_version:
-      runner = self._ui_runners[ui_version]
-      schema_manager = self._schema_managers[ui_version]
-      selected_catalog = (
-          schema_manager.get_selected_catalog() if schema_manager else None
-      )
-    else:
-      runner = self._text_runner
-      selected_catalog = None
+    if ui_version and (not selected_catalog or not selected_catalog.catalog_schema):
+      logger.error("--- DealAgent.fetch_response: A2UI schema not loaded. ---")
+      return [
+          Part(
+              root=TextPart(
+                  text=(
+                      "I'm sorry, I'm facing an internal configuration error "
+                      "with my UI components. Please contact support."
+                  )
+              )
+          )
+      ]
 
-    session = await runner.session_service.get_session(
+    session = await self._runner.session_service.get_session(
         app_name=self._agent_name,
         user_id=self._user_id,
         session_id=session_id,
     )
     if session is None:
-      session = await runner.session_service.create_session(
+      session = await self._runner.session_service.create_session(
           app_name=self._agent_name,
           user_id=self._user_id,
           state=session_state,
@@ -206,33 +202,15 @@ class ContactAgent:
     elif "base_url" not in session.state:
       session.state["base_url"] = self.base_url
 
-    # --- Begin: UI Validation and Retry Logic ---
-    max_retries = 1  # Total 2 attempts
+    max_retries = 1
     attempt = 0
     current_query_text = query
-
-    # Ensure catalog schema was loaded
-    if ui_version and (not selected_catalog or not selected_catalog.catalog_schema):
-      logger.error(
-          "--- ContactAgent.fetch_response: A2UI_SCHEMA is not loaded. "
-          "Cannot perform UI validation. ---"
-      )
-      return [
-          Part(
-              root=TextPart(
-                  text=(
-                      "I'm sorry, I'm facing an internal configuration"
-                      " error with my UI components. Please contact"
-                      " support."
-                  )
-              )
-          )
-      ]
+    markdown_body = ""
 
     while attempt <= max_retries:
       attempt += 1
       logger.info(
-          "--- ContactAgent.fetch_response: Attempt"
+          "--- DealAgent.fetch_response: Attempt"
           f" {attempt}/{max_retries + 1} for session {session_id} ---"
       )
 
@@ -240,141 +218,62 @@ class ContactAgent:
           role="user", parts=[types.Part.from_text(text=current_query_text)]
       )
 
-      full_content_list = []
-
-      async for event in runner.run_async(
+      full_content_list: List[str] = []
+      async for event in self._runner.run_async(
           user_id=self._user_id,
           session_id=session.id,
           new_message=current_message,
       ):
         if event.is_final_response():
-          if event.content and event.content.parts and event.content.parts[0].text:
-            full_content_list.extend([p.text for p in event.content.parts if p.text])
-
-      final_response_content = "".join(full_content_list)
-
-      if final_response_content is None:
-        logger.warning(
-            "--- ContactAgent.fetch_response: Received no final response"
-            f" content from runner (Attempt {attempt}). ---"
-        )
-        if attempt <= max_retries:
-          current_query_text = (
-              "I received no response. Please try again."
-              f"Please retry the original request: '{query}'"
-          )
-          logger.info(f"Retrying with query: {current_query_text}")
-          continue  # Go to next retry
-        else:
-          logger.info("Retries exhausted on no-response")
-          # Retries exhausted on no-response
-          final_response_content = (
-              "I'm sorry, I encountered an error and couldn't process your request."
-          )
-          # Fall through to send this as a text-only error
-
-      is_valid = False
-      error_message = ""
-
-      if ui_version:
-        logger.info(
-            "--- ContactAgent.fetch_response: Validating UI response (Attempt"
-            f" {attempt})... ---"
-        )
-        try:
-          logger.info(
-              "--- ContactAgent.fetch_response: trying to parse response:"
-              f" {final_response_content})... ---"
-          )
-          response_parts = parse_response(final_response_content)
-
-          for part in response_parts:
-            if not part.a2ui_json:
-              continue
-
-            parsed_json_data = part.a2ui_json
-
-            # Handle the "no results found" or empty JSON case
-            if parsed_json_data == []:
-              logger.info(
-                  "--- ContactAgent.fetch_response: Empty JSON list found. "
-                  "Assuming valid (e.g., 'no results'). ---"
-              )
-              is_valid = True
-            else:
-              # --- Validation Steps ---
-              # Check if it validates against the A2UI_SCHEMA
-              # This will raise jsonschema.exceptions.ValidationError if it fails
-              logger.info(
-                  "--- ContactAgent.fetch_response: Validating against"
-                  " A2UI_SCHEMA... ---"
-              )
-              selected_catalog.validator.validate(parsed_json_data)
-              # --- End Validation Steps ---
-
-              logger.info(
-                  "--- ContactAgent.fetch_response: UI JSON successfully"
-                  " parsed AND validated against schema. Validation OK"
-                  f" (Attempt {attempt}). ---"
-              )
-              is_valid = True
-        except (
-            ValueError,
-            json.JSONDecodeError,
-            jsonschema.exceptions.ValidationError,
-        ) as e:
-          logger.warning(
-              f"--- ContactAgent.fetch_response: A2UI validation failed: {e}"
-              f" (Attempt {attempt}) ---"
-          )
-          logger.warning(
-              f"--- Failed response content: {final_response_content[:500]}... ---"
-          )
-          error_message = f"Validation failed: {e}."
-
-      else:  # Not using UI, so text is always "valid"
-        is_valid = True
-
-      if is_valid:
-        logger.info(
-            "--- ContactAgent.fetch_response: Response is valid. Task complete"
-            f" (Attempt {attempt}). ---"
-        )
-
-        # Already validated, so we can return the parts.
-        return parse_response_to_parts(final_response_content)
-
-      # --- If we're here, it means validation failed ---
-      if attempt <= max_retries:
-        logger.warning(
-            "--- ContactAgent.fetch_response: Retrying..."
-            f" ({attempt}/{max_retries + 1}) ---"
-        )
-        # Prepare the query for the retry
-        current_query_text = (
-            f"Your previous response was invalid. {error_message} You MUST"
-            " generate a valid response that strictly follows the A2UI JSON"
-            " SCHEMA. The response MUST be a JSON list of A2UI messages."
-            f" Ensure each JSON part is wrapped in '{A2UI_OPEN_TAG}' and"
-            f" '{A2UI_CLOSE_TAG}' tags. Please retry the original request:"
-            f" '{query}'"
-        )
-        # Loop continues...
-
-    # --- If we're here, it means we've exhausted retries ---
-    logger.error(
-        "--- ContactAgent.fetch_response: Max retries exhausted. Sending"
-        " text-only error. ---"
-    )
-    return [
-        Part(
-            root=TextPart(
-                text=(
-                    "I'm sorry, I'm having trouble generating the interface"
-                    " for that request right now. Please try again in a"
-                    " moment."
-                )
+          if event.content and event.content.parts:
+            full_content_list.extend(
+                [p.text for p in event.content.parts if p.text]
             )
+
+      markdown_body = "".join(full_content_list).strip()
+
+      if markdown_body:
+        break
+
+      if attempt <= max_retries:
+        current_query_text = (
+            "I received no response. Please try again. "
+            f"Please retry the original request: '{query}'"
         )
-    ]
-    # --- End: UI Validation and Retry Logic ---
+        logger.info("Retrying after empty model response.")
+      else:
+        markdown_body = (
+            "I'm sorry, I encountered an error and couldn't process your request."
+        )
+
+    if not ui_version:
+      return [Part(root=TextPart(text=markdown_body))]
+
+    # Host-injected A2UI (simulates a plugin wrapping any markdown agent).
+    try:
+      if query.strip().upper().startswith(_FEEDBACK_QUERY_PREFIX):
+        injected = self._load_injected_a2ui("follow_success.json")
+      else:
+        injected = self._load_injected_a2ui("hitl_feedback.json")
+      selected_catalog.validator.validate(injected)
+    except (OSError, json.JSONDecodeError, jsonschema.exceptions.ValidationError) as e:
+      logger.error("--- DealAgent.fetch_response: Injected A2UI invalid: %s ---", e)
+      return [
+          Part(
+              root=TextPart(
+                  text=(
+                      "I'm sorry, I'm having trouble loading the feedback UI. "
+                      "Here is the text response only:\n\n"
+                      f"{markdown_body}"
+                  )
+              )
+          )
+      ]
+
+    combined = (
+        f"{markdown_body.rstrip()}\n\n"
+        f"{A2UI_OPEN_TAG}\n{json.dumps(injected)}\n{A2UI_CLOSE_TAG}"
+    )
+    return parse_response_to_parts(
+        combined, validator=selected_catalog.validator
+    )

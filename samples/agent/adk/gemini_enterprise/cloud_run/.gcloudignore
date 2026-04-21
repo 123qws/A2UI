@@ -1,0 +1,17 @@
+.git
+.gitignore
+
+# Local Python environments should never be uploaded.
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+
+# Local editor/system artifacts
+.DS_Store
+
+# Local build output (uv build)
+dist/

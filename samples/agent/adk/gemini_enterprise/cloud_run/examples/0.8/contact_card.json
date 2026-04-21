@@ -1,465 +1,173 @@
 [
   {
     "beginRendering": {
-      "surfaceId": "contact-card",
-      "root": "main_card"
+      "surfaceId": "deal-card",
+      "root": "deal-root"
     }
   },
   {
     "surfaceUpdate": {
-      "surfaceId": "contact-card",
+      "surfaceId": "deal-card",
       "components": [
         {
-          "id": "main_card",
-          "component": {
-            "Card": {
-              "child": "main_column"
-            }
-          }
-        },
-        {
-          "id": "main_column",
+          "id": "deal-root",
           "component": {
             "Column": {
               "children": {
                 "explicitList": [
-                  "profile_image_column",
-                  "description_column",
-                  "div",
-                  "info_rows_column",
-                  "action_buttons_row",
-                  "link_text_wrapper"
+                  "deal-title",
+                  "deal-summary",
+                  "deal-stage",
+                  "deal-value",
+                  "deal-quarter",
+                  "deal-next-step",
+                  "feedback-header",
+                  "helpfulness-field",
+                  "comment-field",
+                  "submit-feedback-button"
                 ]
-              },
-              "alignment": "stretch"
-            }
-          }
-        },
-        {
-          "id": "profile_image_column",
-          "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "profile_image"
-                ]
-              },
-              "alignment": "center"
-            }
-          }
-        },
-        {
-          "id": "profile_image",
-          "component": {
-            "Image": {
-              "url": {
-                "path": "/imageUrl"
-              },
-              "usageHint": "avatar",
-              "fit": "cover"
-            }
-          }
-        },
-        {
-          "id": "user_heading",
-          "weight": 1,
-          "component": {
-            "Text": {
-              "text": {
-                "path": "/name"
-              },
-              "usageHint": "h2"
-            }
-          }
-        },
-        {
-          "id": "description_text_1",
-          "component": {
-            "Text": {
-              "text": {
-                "path": "/title"
-              },
-              "usageHint": "h4"
-            }
-          }
-        },
-        {
-          "id": "description_text_2",
-          "component": {
-            "Text": {
-              "text": {
-                "path": "/team"
-              },
-              "usageHint": "caption"
-            }
-          }
-        },
-        {
-          "id": "description_column",
-          "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "user_heading",
-                  "description_text_1",
-                  "description_text_2"
-                ]
-              },
-              "alignment": "center"
-            }
-          }
-        },
-        {
-          "id": "calendar_icon",
-          "component": {
-            "Icon": {
-              "name": {
-                "literalString": "calendarToday"
               }
             }
           }
         },
         {
-          "id": "calendar_secondary_text",
+          "id": "deal-title",
           "component": {
             "Text": {
-              "usageHint": "h5",
+              "usageHint": "h2",
               "text": {
-                "path": "/calendar"
+                "path": "/customerName"
               }
             }
           }
         },
         {
-          "id": "calendar_primary_text",
+          "id": "deal-summary",
           "component": {
             "Text": {
               "text": {
-                "literalString": "Calendar"
-              },
-              "usageHint": "caption"
-            }
-          }
-        },
-        {
-          "id": "calendar_text_column",
-          "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "calendar_primary_text",
-                  "calendar_secondary_text"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "info_row_1",
-          "component": {
-            "Row": {
-              "children": {
-                "explicitList": [
-                  "calendar_icon",
-                  "calendar_text_column"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "location_icon",
-          "component": {
-            "Icon": {
-              "name": {
-                "literalString": "locationOn"
+                "path": "/dealSummary"
               }
             }
           }
         },
         {
-          "id": "location_secondary_text",
+          "id": "deal-stage",
           "component": {
             "Text": {
-              "usageHint": "h5",
               "text": {
-                "path": "/location"
+                "path": "/stage"
               }
             }
           }
         },
         {
-          "id": "location_primary_text",
+          "id": "deal-value",
           "component": {
             "Text": {
               "text": {
-                "literalString": "Location"
-              },
-              "usageHint": "caption"
-            }
-          }
-        },
-        {
-          "id": "location_text_column",
-          "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "location_primary_text",
-                  "location_secondary_text"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "info_row_2",
-          "component": {
-            "Row": {
-              "children": {
-                "explicitList": [
-                  "location_icon",
-                  "location_text_column"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "mail_icon",
-          "component": {
-            "Icon": {
-              "name": {
-                "literalString": "mail"
+                "path": "/estimatedValueUsd"
               }
             }
           }
         },
         {
-          "id": "mail_secondary_text",
+          "id": "deal-quarter",
           "component": {
             "Text": {
-              "usageHint": "h5",
               "text": {
-                "path": "/email"
+                "path": "/closeQuarter"
               }
             }
           }
         },
         {
-          "id": "mail_primary_text",
+          "id": "deal-next-step",
           "component": {
             "Text": {
               "text": {
-                "literalString": "Email"
-              },
-              "usageHint": "caption"
-            }
-          }
-        },
-        {
-          "id": "mail_text_column",
-          "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "mail_primary_text",
-                  "mail_secondary_text"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "info_row_3",
-          "component": {
-            "Row": {
-              "children": {
-                "explicitList": [
-                  "mail_icon",
-                  "mail_text_column"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "div",
-          "component": {
-            "Divider": {}
-          }
-        },
-        {
-          "id": "call_icon",
-          "component": {
-            "Icon": {
-              "name": {
-                "literalString": "call"
+                "path": "/nextStep"
               }
             }
           }
         },
         {
-          "id": "call_secondary_text",
+          "id": "feedback-header",
           "component": {
             "Text": {
-              "usageHint": "h5",
+              "usageHint": "h4",
               "text": {
-                "path": "/mobile"
+                "literalString": "How helpful was this response? (1-5)"
               }
             }
           }
         },
         {
-          "id": "call_primary_text",
+          "id": "helpfulness-field",
           "component": {
-            "Text": {
+            "TextField": {
+              "label": {
+                "literalString": "Helpfulness (1=not helpful, 5=very helpful)"
+              },
               "text": {
-                "literalString": "Mobile"
+                "path": "/helpfulness"
               },
-              "usageHint": "caption"
+              "type": "number"
             }
           }
         },
         {
-          "id": "call_text_column",
+          "id": "comment-field",
           "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "call_primary_text",
-                  "call_secondary_text"
-                ]
+            "TextField": {
+              "label": {
+                "literalString": "Additional comment"
               },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "info_row_4",
-          "component": {
-            "Row": {
-              "children": {
-                "explicitList": [
-                  "call_icon",
-                  "call_text_column"
-                ]
-              },
-              "distribution": "start",
-              "alignment": "start"
-            }
-          }
-        },
-        {
-          "id": "info_rows_column",
-          "weight": 1,
-          "component": {
-            "Column": {
-              "children": {
-                "explicitList": [
-                  "info_row_1",
-                  "info_row_2",
-                  "info_row_3",
-                  "info_row_4"
-                ]
-              },
-              "alignment": "stretch"
-            }
-          }
-        },
-        {
-          "id": "button_1_text",
-          "component": {
-            "Text": {
               "text": {
-                "literalString": "Follow"
+                "path": "/comment"
               }
             }
           }
         },
         {
-          "id": "button_1",
+          "id": "submit-feedback-text",
+          "component": {
+            "Text": {
+              "text": {
+                "literalString": "Submit Feedback"
+              }
+            }
+          }
+        },
+        {
+          "id": "submit-feedback-button",
           "component": {
             "Button": {
-              "child": "button_1_text",
+              "child": "submit-feedback-text",
               "primary": true,
               "action": {
-                "name": "follow_contact"
-              }
-            }
-          }
-        },
-        {
-          "id": "button_2_text",
-          "component": {
-            "Text": {
-              "text": {
-                "literalString": "Message"
-              }
-            }
-          }
-        },
-        {
-          "id": "button_2",
-          "component": {
-            "Button": {
-              "child": "button_2_text",
-              "primary": false,
-              "action": {
-                "name": "send_message"
-              }
-            }
-          }
-        },
-        {
-          "id": "action_buttons_row",
-          "component": {
-            "Row": {
-              "children": {
-                "explicitList": [
-                  "button_1",
-                  "button_2"
+                "name": "submit_feedback",
+                "context": [
+                  {
+                    "key": "customerName",
+                    "value": {
+                      "path": "/customerName"
+                    }
+                  },
+                  {
+                    "key": "helpfulness",
+                    "value": {
+                      "path": "/helpfulness"
+                    }
+                  },
+                  {
+                    "key": "comment",
+                    "value": {
+                      "path": "/comment"
+                    }
+                  }
                 ]
-              },
-              "distribution": "center",
-              "alignment": "center"
-            }
-          }
-        },
-        {
-          "id": "link_text",
-          "component": {
-            "Text": {
-              "text": {
-                "literalString": "[View Full Profile](/profile)"
               }
-            }
-          }
-        },
-        {
-          "id": "link_text_wrapper",
-          "component": {
-            "Row": {
-              "children": {
-                "explicitList": [
-                  "link_text"
-                ]
-              },
-              "distribution": "center",
-              "alignment": "center"
             }
           }
         }
@@ -468,40 +176,40 @@
   },
   {
     "dataModelUpdate": {
-      "surfaceId": "contact-card",
+      "surfaceId": "deal-card",
       "path": "/",
       "contents": [
         {
-          "key": "name",
-          "valueString": "Alex Jordan"
+          "key": "customerName",
+          "valueString": "Acme Retail Group"
         },
         {
-          "key": "title",
-          "valueString": "Software Engineer"
+          "key": "dealSummary",
+          "valueString": "Modernize recommendation systems and analytics."
         },
         {
-          "key": "team",
-          "valueString": "Cloud AI"
+          "key": "stage",
+          "valueString": "Negotiation"
         },
         {
-          "key": "location",
-          "valueString": "Sunnyvale, CA"
+          "key": "estimatedValueUsd",
+          "valueString": "$2.4M"
         },
         {
-          "key": "email",
-          "valueString": "alex.jordan@google.com"
+          "key": "closeQuarter",
+          "valueString": "Q3 2026"
         },
         {
-          "key": "mobile",
-          "valueString": "(123) 456-7890"
+          "key": "nextStep",
+          "valueString": "Finalize legal terms and security review."
         },
         {
-          "key": "calendar",
-          "valueString": "Available until 5:00 PM PST"
+          "key": "helpfulness",
+          "valueString": ""
         },
         {
-          "key": "imageUrl",
-          "valueString": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
+          "key": "comment",
+          "valueString": ""
         }
       ]
     }

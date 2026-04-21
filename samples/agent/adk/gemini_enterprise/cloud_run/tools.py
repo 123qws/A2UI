@@ -19,46 +19,45 @@ import os
 logger = logging.getLogger(__name__)
 
 
-def get_contact_info(name: str = None, department: str = "") -> str:
-  """Call this tool to get a list of contacts based on a name and optional department.
+def get_deal_info(customer: str = None, sector: str = "") -> str:
+  """Returns fake Google Cloud customer deal data.
 
-  'name' is the person's name to search for. 'department' is the optional
-  department to filter by.
+  'customer' is an optional customer name filter. 'sector' is an optional
+  industry filter.
   """
-  logger.info("--- TOOL CALLED: get_contact_info ---")
-  logger.info(f"  - Name: {name}")
-  logger.info(f"  - Department: {department}")
+  logger.info("--- TOOL CALLED: get_deal_info ---")
+  logger.info(f"  - Customer: {customer}")
+  logger.info(f"  - Sector: {sector}")
 
   results = []
   try:
     script_dir = os.path.dirname(__file__)
-    file_path = os.path.join(script_dir, "contact_data.json")
+    file_path = os.path.join(script_dir, "deal_data.json")
     with open(file_path) as f:
-      contact_data_str = f.read()
-      all_contacts = json.loads(contact_data_str)
+      deal_data_str = f.read()
+      all_deals = json.loads(deal_data_str)
 
-    if name is None:
-      return json.dumps(all_contacts)
+    if customer is None:
+      return json.dumps(all_deals)
 
-    name_lower = name.lower()
+    customer_lower = customer.lower()
+    sector_lower = sector.lower() if sector else ""
 
-    dept_lower = department.lower() if department else ""
-
-    # Filter by name
+    # Filter by customer name.
     results = [
-        contact for contact in all_contacts if name_lower in contact["name"].lower()
+        deal for deal in all_deals if customer_lower in deal["customerName"].lower()
     ]
 
-    # If department is provided, filter results further
-    if dept_lower:
+    # If sector is provided, filter results further.
+    if sector_lower:
       results = [
-          contact for contact in results if dept_lower in contact["department"].lower()
+          deal for deal in results if sector_lower in deal["sector"].lower()
       ]
 
-    logger.info(f"  - Success: Found {len(results)} matching contacts.")
+    logger.info(f"  - Success: Found {len(results)} matching deals.")
 
   except FileNotFoundError:
-    logger.error(f"  - Error: contact_data.json not found at {file_path}")
+    logger.error(f"  - Error: deal_data.json not found at {file_path}")
   except json.JSONDecodeError:
     logger.error(f"  - Error: Failed to decode JSON from {file_path}")
 

@@ -1,7 +1,7 @@
 [
   {
     "beginRendering": {
-      "surfaceId": "contact-list",
+      "surfaceId": "deal-list",
       "root": "root-column",
       "styles": {
         "primaryColor": "#007BFF",
@@ -11,7 +11,7 @@
   },
   {
     "surfaceUpdate": {
-      "surfaceId": "contact-list",
+      "surfaceId": "deal-list",
       "components": [
         {
           "id": "root-column",
@@ -32,7 +32,7 @@
             "Text": {
               "usageHint": "h1",
               "text": {
-                "literalString": "Found Contacts"
+                "literalString": "Google Cloud Deal Pipeline"
               }
             }
           }
@@ -45,7 +45,7 @@
               "children": {
                 "template": {
                   "componentId": "item-card-template",
-                  "dataBinding": "/contacts"
+                  "dataBinding": "/deals"
                 }
               }
             }
@@ -92,7 +92,7 @@
               "children": {
                 "explicitList": [
                   "template-name",
-                  "template-title"
+                  "template-stage"
                 ]
               }
             }
@@ -104,17 +104,17 @@
             "Text": {
               "usageHint": "h3",
               "text": {
-                "path": "/name"
+                "path": "/customerName"
               }
             }
           }
         },
         {
-          "id": "template-title",
+          "id": "template-stage",
           "component": {
             "Text": {
               "text": {
-                "path": "/title"
+                "path": "/stage"
               }
             }
           }
@@ -136,18 +136,18 @@
               "child": "view-button-text",
               "primary": true,
               "action": {
-                "name": "view_profile",
+                "name": "view_deal",
                 "context": [
                   {
-                    "key": "contactName",
+                    "key": "customerName",
                     "value": {
-                      "path": "/name"
+                      "path": "/customerName"
                     }
                   },
                   {
-                    "key": "department",
+                    "key": "sector",
                     "value": {
-                      "path": "/department"
+                      "path": "/sector"
                     }
                   }
                 ]
@@ -160,67 +160,59 @@
   },
   {
     "dataModelUpdate": {
-      "surfaceId": "contact-list",
+      "surfaceId": "deal-list",
       "path": "/",
       "contents": [
         {
-          "key": "contacts",
+          "key": "deals",
           "valueMap": [
             {
-              "key": "contact1",
+              "key": "deal1",
               "valueMap": [
                 {
-                  "key": "name",
-                  "valueString": "Alice Wonderland"
+                  "key": "customerName",
+                  "valueString": "Acme Retail Group"
                 },
                 {
-                  "key": "phone",
-                  "valueString": "+1-555-123-4567"
+                  "key": "stage",
+                  "valueString": "Negotiation"
                 },
                 {
-                  "key": "email",
-                  "valueString": "alice@example.com"
+                  "key": "sector",
+                  "valueString": "Retail"
+                },
+                {
+                  "key": "estimatedValueUsd",
+                  "valueString": "$2.4M"
                 },
                 {
                   "key": "imageUrl",
-                  "valueString": "https://example.com/alice.jpg"
-                },
-                {
-                  "key": "title",
-                  "valueString": "Mad Hatter"
-                },
-                {
-                  "key": "department",
-                  "valueString": "Wonderland"
+                  "valueString": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=120&h=120&fit=crop"
                 }
               ]
             },
             {
-              "key": "contact2",
+              "key": "deal2",
               "valueMap": [
                 {
-                  "key": "name",
-                  "valueString": "Bob The Builder"
+                  "key": "customerName",
+                  "valueString": "Skyline Health Network"
                 },
                 {
-                  "key": "phone",
-                  "valueString": "+1-555-765-4321"
+                  "key": "stage",
+                  "valueString": "Technical Validation"
                 },
                 {
-                  "key": "email",
-                  "valueString": "bob@example.com"
+                  "key": "sector",
+                  "valueString": "Healthcare"
+                },
+                {
+                  "key": "estimatedValueUsd",
+                  "valueString": "$1.1M"
                 },
                 {
                   "key": "imageUrl",
-                  "valueString": "https://example.com/bob.jpg"
-                },
-                {
-                  "key": "title",
-                  "valueString": "Construction"
-                },
-                {
-                  "key": "department",
-                  "valueString": "Building"
+                  "valueString": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=120&h=120&fit=crop"
                 }
               ]
             }

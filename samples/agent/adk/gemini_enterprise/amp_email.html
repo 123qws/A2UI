@@ -1,0 +1,374 @@
+<!doctype html>
+<html ⚡4email lang="en">
+<head>
+  <meta charset="utf-8" />
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+  <style amp4email-boilerplate>body{visibility:hidden}</style>
+
+  <style amp-custom>
+    :root {
+      --bg: #f3f4f6;
+      --surface: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #1a73e8;
+      --accent-soft: #e8f0fe;
+      --subtle: #f9fafb;
+      --agent-bg: #f8fafc;
+      --agent-border: #e2e8f0;
+      --success-bg: #ecfdf3;
+      --success-border: #bbf7d0;
+      --success-text: #166534;
+      --error-bg: #fef2f2;
+      --error-border: #fecaca;
+      --error-text: #991b1b;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 14px 32px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 600px; margin: 0 auto; }
+
+    .header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 42em;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--subtle);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      margin-top: 12px;
+    }
+
+    .card-title {
+      margin: 0 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+    }
+
+    .eyebrow {
+      margin: 16px 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .eyebrow:first-child { margin-top: 0; }
+
+    .bubble {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      background: var(--subtle);
+      font-size: 14px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .bubble.agent {
+      background: var(--agent-bg);
+      border-color: var(--agent-border);
+    }
+
+    .form-section-title {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 650;
+      color: var(--text);
+    }
+
+    .form-section-sub {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .scale-hint {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      max-width: 100%;
+    }
+
+    .scale {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .opt {
+      position: relative;
+      flex: 1 1 calc(20% - 8px);
+      min-width: 52px;
+      min-height: 44px;
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 650;
+      color: var(--text);
+      padding: 10px 6px;
+    }
+
+    .opt input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+    }
+
+    .opt:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #0d47a1;
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .label-block {
+      display: block;
+      margin: 18px 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.45;
+      padding: 12px;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .check-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--subtle);
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .check-wrap input {
+      margin-top: 3px;
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+    }
+
+    .actions {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 650;
+      color: #fff;
+      background: var(--accent);
+      cursor: pointer;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .panel {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .panel.success {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+    }
+
+    .panel.error {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      background: #eef2f7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Prime HITL for deal agent</h1>
+      <p>Quick check-in — what worked and what didn’t.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Conversation</p>
+      <p class="eyebrow">User input</p>
+      <div class="bubble">Show deal status for Acme Retail Group</div>
+
+      <p class="eyebrow">Agent response</p>
+      <div class="bubble agent">Here’s a fake demo response…
+(Replace with the real assistant output.)</div>
+    </div>
+
+    <form
+      method="post"
+      action-xhr="https://YOUR_WORKER_SUBDOMAIN.workers.dev/hitl-feedback"
+      class="card"
+      on="submit-success: feedback-shell.hide, thankyou.show; submit-error: errpanel.show"
+    >
+      <div id="feedback-shell">
+        <input type="hidden" name="threadId" value="demo-thread-123" />
+        <input type="hidden" name="messageId" value="agent-msg-456" />
+
+        <p class="form-section-title">Your feedback</p>
+        <p class="form-section-sub">All options are visible — tap a score, then submit.</p>
+
+        <div class="scale-hint">
+          <span>1 · Not helpful</span>
+          <span>5 · Very helpful</span>
+        </div>
+
+        <div class="scale" role="group" aria-label="Helpfulness 1 to 5">
+          <label class="opt"><input type="radio" name="helpfulness" value="1" required />1</label>
+          <label class="opt"><input type="radio" name="helpfulness" value="2" />2</label>
+          <label class="opt"><input type="radio" name="helpfulness" value="3" />3</label>
+          <label class="opt"><input type="radio" name="helpfulness" value="4" />4</label>
+          <label class="opt"><input type="radio" name="helpfulness" value="5" />5</label>
+        </div>
+        <div class="hint">Same 1–5 signal as your A2UI HITL slider.</div>
+
+        <label class="check-wrap">
+          <input id="infoComplete" type="checkbox" name="infoComplete" value="true" />
+          <span>The information was complete (nothing important missing)</span>
+        </label>
+
+        <label class="label-block" for="feedbackText">Written feedback (optional)</label>
+        <textarea
+          id="feedbackText"
+          name="feedbackText"
+          placeholder="What should be improved? (accuracy, missing details, clarity, etc.)"
+        ></textarea>
+
+        <div class="actions">
+          <button type="submit">Submit feedback</button>
+        </div>
+
+        <div id="errpanel" class="panel error" hidden>
+          Submission failed (usually CORS / endpoint / network). Set <code>action-xhr</code> to a Worker that returns <code>200</code> with AMP CORS headers.
+        </div>
+
+        <div class="footer-note">
+          If the checkbox is not selected, treat <code>infoComplete</code> as <code>false</code> on the server.
+        </div>
+      </div>
+
+      <div id="thankyou" class="panel success" hidden>
+        Thanks — your feedback was submitted.
+      </div>
+    </form>
+  </div>
+</body>
+</html>

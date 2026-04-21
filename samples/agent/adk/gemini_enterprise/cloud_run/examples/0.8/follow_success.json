@@ -1,13 +1,7 @@
 [
   {
-    "beginRendering": {
-      "surfaceId": "contact-card",
-      "root": "success_card"
-    }
-  },
-  {
     "surfaceUpdate": {
-      "surfaceId": "contact-card",
+      "surfaceId": "deal-feedback",
       "components": [
         {
           "id": "success_card",
@@ -46,13 +40,24 @@
           "component": {
             "Text": {
               "text": {
-                "literalString": "Successfully Followed"
+                "literalString": "Feedback Submitted. Thank you!"
               },
               "usageHint": "h2"
             }
           }
         }
       ]
+    }
+  },
+  {
+    "beginRendering": {
+      "surfaceId": "deal-feedback",
+      "root": "success_card",
+      "catalogId": "https://a2ui.org/specification/v0_8/standard_catalog_definition.json",
+      "styles": {
+        "primaryColor": "#1A73E8",
+        "font": "Roboto"
+      }
     }
   }
 ]

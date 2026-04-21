@@ -30,16 +30,16 @@ from a2a.utils import (
     new_task,
 )
 from a2a.utils.errors import ServerError
-from a2ui.a2a import try_activate_a2ui_extension
-from agent import ContactAgent
+from a2ui.a2a.extension import try_activate_a2ui_extension
+from agent import DealAgent
 
 logger = logging.getLogger(__name__)
 
 
-class ContactAgentExecutor(AgentExecutor):
-  """Contact AgentExecutor Example."""
+class DealAgentExecutor(AgentExecutor):
+  """Deal AgentExecutor Example."""
 
-  def __init__(self, agent: ContactAgent):
+  def __init__(self, agent: DealAgent):
     self._agent = agent
 
   async def execute(
@@ -57,11 +57,11 @@ class ContactAgentExecutor(AgentExecutor):
     if active_ui_version:
       logger.info(
           "--- AGENT_EXECUTOR: A2UI extension is active"
-          f" (v{active_ui_version}). Using UI runner. ---"
+          f" (v{active_ui_version}). Markdown reply + host-injected HITL UI. ---"
       )
     else:
       logger.info(
-          "--- AGENT_EXECUTOR: A2UI extension is not active. Using text runner. ---"
+          "--- AGENT_EXECUTOR: A2UI extension is not active. Markdown only. ---"
       )
 
     if context.message and context.message.parts:
@@ -87,26 +87,19 @@ class ContactAgentExecutor(AgentExecutor):
       action = ui_event_part.get("name")
       ctx = ui_event_part.get("context", {})
 
-      if action == "view_profile":
-        contact_name = ctx.get("contactName", "Unknown")
-        department = ctx.get("department", "")
-        query = f"WHO_IS: {contact_name} from {department}"
-
-      elif action == "send_email":
-        contact_name = ctx.get("contactName", "Unknown")
-        email = ctx.get("email", "Unknown")
-        query = f"USER_WANTS_TO_EMAIL: {contact_name} at {email}"
-
-      elif action == "send_message":
-        contact_name = ctx.get("contactName", "Unknown")
-        query = f"USER_WANTS_TO_MESSAGE: {contact_name}"
-
-      elif action == "follow_contact":
-        query = "ACTION: follow_contact"
-
-      elif action == "view_full_profile":
-        contact_name = ctx.get("contactName", "Unknown")
-        query = f"USER_WANTS_FULL_PROFILE: {contact_name}"
+      if action == "view_deal":
+        customer_name = ctx.get("customerName", "Unknown")
+        sector = ctx.get("sector", "")
+        query = f"SHOW_DEAL: {customer_name} from {sector}"
+      elif action == "submit_feedback":
+        helpfulness = ctx.get("helpfulness", "")
+        info_complete = ctx.get("infoComplete", "")
+        feedback_text = ctx.get("feedbackText", ctx.get("comment", ""))
+        query = (
+            "FEEDBACK_SUBMITTED: "
+            f"helpfulness={helpfulness}; infoComplete={info_complete}; "
+            f"feedbackText={feedback_text}"
+        )
 
       else:
         query = f"User submitted an event: {action} with data: {ctx}"
@@ -129,7 +122,7 @@ class ContactAgentExecutor(AgentExecutor):
     self._log_parts(final_parts)
 
     final_state = TaskState.input_required
-    if action in ["send_email", "send_message", "view_full_profile"]:
+    if action in ["submit_feedback"]:
       final_state = TaskState.completed
 
     await updater.update_status(

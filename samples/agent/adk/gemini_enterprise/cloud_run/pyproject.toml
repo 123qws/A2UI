@@ -13,13 +13,13 @@
 # limitations under the License.
 
 [project]
-name = "a2ui-contact-lookup"
+name = "a2ui-deal-agent"
 version = "0.1.0"
-description = "Sample Google ADK-based Contact Lookup agent that uses a2ui extension and is hosted as an A2A server agent on Cloud Run."
+description = "Sample Google ADK-based Deal agent with A2UI HITL feedback, hosted as an A2A server on Cloud Run."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "a2a-sdk>=0.3.4",
+    "a2a-sdk>=0.3.0,<0.3.4",
     "google-adk>=1.28.0",
     "google-genai>=1.27.0",
     "python-dotenv>=1.1.0",

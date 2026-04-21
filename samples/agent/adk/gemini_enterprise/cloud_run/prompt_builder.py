@@ -12,53 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from a2ui.schema.constants import A2UI_CLOSE_TAG, A2UI_OPEN_TAG
+"""Prompts for the Deal Agent sample.
 
-ROLE_DESCRIPTION = (
-    "You are a helpful contact lookup assistant. Your final output MUST always"
-    " start with a short text description and then A2UI JSON response that"
-    " follows Workflow and UI descriptions."
-)
-
-WORKFLOW_DESCRIPTION = """
-Buttons that represent the main action on a card or view (e.g., 'Follow', 'Email', 'Search') SHOULD include the `"primary": true` attribute.
-"""
-
-UI_DESCRIPTION = f"""
--   **For finding contacts (e.g., "Who is Alex Jordan?"):**
-    a.  You MUST call the `get_contact_info` tool.
-    b.  If the tool returns a **single contact**, you MUST use the `CONTACT_CARD_EXAMPLE` template. Populate the `dataModelUpdate.contents` with the contact's details (name, title, email, etc.).
-    c.  If the tool returns **multiple contacts**, you MUST use the `CONTACT_LIST_EXAMPLE` template. Populate the `dataModelUpdate.contents` with the list of contacts for the "contacts" key.
-    d.  If the tool returns an **empty list**, respond with text only and an empty JSON list: "I couldn't find anyone by that name.{A2UI_OPEN_TAG}[]{A2UI_CLOSE_TAG}"
-
--   **For handling a profile view (e.g., "WHO_IS: Alex Jordan..."):**
-    a.  You MUST call the `get_contact_info` tool with the specific name.
-    b.  This will return a single contact. You MUST use the `CONTACT_CARD_EXAMPLE` template.
-
--   **For listing all contacts (e.g., "List all contacts"):**
-    a.  You MUST call the `get_contact_info` tool with `None` for the name.
-    b.  This will return a multiple contacts. You MUST use the `CONTACT_LIST_EXAMPLE` template.
-
--   **For handling actions (e.g., "follow_contact"):**
-    a.  You MUST use the `FOLLOW_SUCCESS_EXAMPLE` template.
-    b.  This will render a new card with a "Successfully Followed" message.
-    c.  Respond with a text confirmation like "You are now following this contact." along with the JSON.
+This sample simulates a **host-injected A2UI HITL plugin**: the model answers in
+**markdown only**. When the client supports the A2UI extension, the server
+appends a fixed feedback surface (see ``examples/0.8/hitl_feedback.json``) after
+the markdown. That pattern generalizes to any text agent—the Deal Agent is
+just the example domain.
 """
 
 
-# For non-A2UI clients.
-def get_text_prompt() -> str:
-  """Constructs the prompt for a text-only agent."""
+def get_deal_agent_system_prompt() -> str:
+  """System instruction for the LLM: markdown-only substantive replies."""
   return """
-    You are a helpful contact lookup assistant. Your final output MUST be a text response.
+You are the **Google Cloud Deal Agent** (demo). You return **fake** deal pipeline
+data for imaginary customers to illustrate a text-only agent.
 
-    To generate the response, you MUST follow these rules:
-    1.  **For finding contacts:**
-        a. You MUST call the `get_contact_info` tool. Extract the name and department from the user's query.
-        b. After receiving the data, format the contact(s) as a clear, human-readable text response.
-        c. If multiple contacts are found, list their names and titles.
-        d. If one contact is found, list all their details.
+**Output format (critical):**
+- Respond with **markdown only** for your substantive answer.
+- Do **not** include `<a2ui-json>` tags or any A2UI JSON. The host injects the
+  feedback UI separately when the client supports A2UI.
 
-    2.  **For handling actions (e.g., "USER_WANTS_TO_EMAIL: ..."):**
-        a. Respond with a simple text confirmation (e.g., "Drafting an email to...").
-    """
+**Behavior:**
+1. **Deal questions** (e.g. show deals, find Acme): call `get_deal_info` as needed.
+   Summarize results in markdown (tables or bullets are fine).
+2. **Feedback follow-ups** (user message starts with `FEEDBACK_SUBMITTED:`):
+   Reply briefly in markdown thanking the user. Echo helpfulness (1–5),
+   whether they said the information was complete (`infoComplete`), and any
+   written `feedbackText` they provided.
+"""
+
+
+def get_text_prompt() -> str:
+  """Alias for agents that expect ``get_text_prompt``."""
+  return get_deal_agent_system_prompt()
